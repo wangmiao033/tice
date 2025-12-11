@@ -248,6 +248,7 @@
                 <a class="btn" style="padding:10px 14px;" id="doc-download" href="./《云上征途（0.1齐天伏魔）》-游戏简介 (1).txt" download>下载文档</a>
                 <a class="btn btn-secondary" style="padding:10px 14px;" id="doc-view" href="./《云上征途（0.1齐天伏魔）》-游戏简介 (1).txt" target="_blank">在线查看</a>
               </div>
+              <div class="notice" id="active-game-tip" style="margin-top:10px;">当前游戏 ID：bizgame，可用 ?id=bizgame 切换</div>
             </div>
           </div>
         </div>
@@ -331,70 +332,71 @@
       });
     });
 
-    // 通用配置：只改这里即可更新展示内容
-    const gameConfig = {
-      title: '商务游戏 · 提测站',
-      versionLabel: 'v0.9.3 (安卓 APK)',
-      releaseDate: '2025-12-11',
-      androidMin: '8.0',
-      size: '75 MB',
-      primaryDownload: 'https://cdn.example.com/app/app-latest.apk',
-      backupDownload: 'https://backup.example.com/app/app-latest.apk',
-      apkFileName: 'app-latest.apk',
-      backupHost: 'backup.example.com',
-      testAccount: 'demo / 123456',
-      checksumFile: 'assets/app-latest.apk.sha256',
-      sha256: '待替换：xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-      docName: '《云上征途（0.1齐天伏魔）》-游戏简介 (1).txt',
-      docPath: './《云上征途（0.1齐天伏魔）》-游戏简介 (1).txt',
-      docLocation: 'C:\\\\Users\\\\WM\\\\Desktop\\\\tice',
-      contactPerson: '对接人：王淼（企业微信）',
-      contactEmail: 'pingce@dxyx6888.com',
-      contactQQ: 'QQ：895528575（工作日 10:00-19:00）'
-    };
-
+    // 通用配置加载：从 config.json 读取，支持 ?id= 指定游戏，?token= 校验
     const setText = (id, text) => {
       const el = document.getElementById(id);
-      if (el && text) el.textContent = text;
+      if (el && text !== undefined) el.textContent = text;
     };
     const setHref = (id, href) => {
       const el = document.getElementById(id);
       if (el && href) el.setAttribute('href', href);
     };
 
-    // 写入标题与版本信息
-    setText('version-title', gameConfig.versionLabel);
-    setText('release-line', `更新于 ${gameConfig.releaseDate} · 适配 Android ${gameConfig.androidMin}+ · 约 ${gameConfig.size}`);
-    setText('test-account', `测试账号：${gameConfig.testAccount}`);
-    setText('checksum-tip', `校验：${gameConfig.checksumFile}`);
+    const params = new URLSearchParams(window.location.search);
+    const requestedId = params.get('id');
+    const providedToken = params.get('token');
 
-    // 下载按钮与链接
-    setHref('primary-download', gameConfig.primaryDownload);
-    setHref('backup-download', gameConfig.backupDownload);
-    setHref('doc-download', gameConfig.docPath);
-    setHref('doc-view', gameConfig.docPath);
+    const applyGame = (game) => {
+      setText('version-title', game.versionLabel);
+      setText('release-line', `更新于 ${game.releaseDate} · 适配 Android ${game.androidMin}+ · 约 ${game.size}`);
+      setText('test-account', `测试账号：${game.testAccount}`);
+      setText('checksum-tip', `校验：${game.checksumFile}`);
 
-    // 提测文档信息
-    setText('doc-name', `文件： ${gameConfig.docName}`);
-    setText('doc-location', `位置：${gameConfig.docLocation}`);
+      setHref('primary-download', game.primaryDownload);
+      setHref('backup-download', game.backupDownload);
+      setHref('doc-download', game.docPath);
+      setHref('doc-view', game.docPath);
 
-    // 联系方式
-    setText('contact-person', gameConfig.contactPerson);
-    const emailEl = document.getElementById('contact-email');
-    if (emailEl) {
-      emailEl.textContent = gameConfig.contactEmail;
-      emailEl.href = `mailto:${gameConfig.contactEmail}`;
-    }
-    setText('contact-qq', gameConfig.contactQQ);
+      setText('doc-name', `文件： ${game.docName}`);
+      setText('doc-location', `位置：${game.docLocation}`);
+      const tip = document.getElementById('active-game-tip');
+      if (tip) tip.textContent = `当前游戏 ID：${game.id}，可用 ?id=${game.id} 切换`;
 
-    // 下载信息块
-    setText('apk-file-line', `文件：${gameConfig.apkFileName} · 约 ${gameConfig.size}`);
-    setText('backup-host', `备源：${gameConfig.backupHost}`);
-    setText('sha256-text', gameConfig.sha256);
+      setText('contact-person', game.contactPerson);
+      const emailEl = document.getElementById('contact-email');
+      if (emailEl) {
+        emailEl.textContent = game.contactEmail;
+        emailEl.href = `mailto:${game.contactEmail}`;
+      }
+      setText('contact-qq', game.contactQQ);
 
-    // 顶部品牌标题（可选）
-    const brandTitle = document.querySelector('.title');
-    if (brandTitle && gameConfig.title) brandTitle.textContent = gameConfig.title;
+      setText('apk-file-line', `文件：${game.apkFileName} · 约 ${game.size}`);
+      setText('backup-host', `备源：${game.backupHost}`);
+      setText('sha256-text', game.sha256 || '待替换：');
+
+      const brandTitle = document.querySelector('.title');
+      if (brandTitle && game.title) brandTitle.textContent = game.title;
+    };
+
+    const renderError = (msg) => {
+      const tip = document.getElementById('active-game-tip');
+      if (tip) tip.textContent = msg;
+      setText('version-title', '未找到配置');
+      setText('release-line', msg || '请检查参数或配置文件');
+    };
+
+    fetch('config.json')
+      .then(res => res.json())
+      .then(cfg => {
+        const list = cfg.games || [];
+        if (!list.length) return renderError('config.json 无游戏配置');
+        let game = list.find(g => g.id === requestedId) || list[0];
+        if (game.token && game.token.length && providedToken !== game.token) {
+          return renderError('访问受限：缺少正确的 token');
+        }
+        applyGame(game);
+      })
+      .catch(() => renderError('加载配置失败，请检查 config.json'));
   </script>
 </body>
 </html>

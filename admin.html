@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>提测配置管理 - Admin</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #111827;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #60a5fa;
+      --danger: #f87171;
+      --border: #1f2937;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 16px 48px;
+    }
+    h1 { margin: 0 0 16px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    label { display: block; margin-top: 10px; font-size: 14px; color: var(--muted); }
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #0b1220;
+      color: var(--text);
+      font-size: 14px;
+    }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .row > div { flex: 1 1 260px; }
+    .btn {
+      padding: 10px 14px;
+      border: none;
+      border-radius: 10px;
+      background: var(--accent);
+      color: #0b1021;
+      font-weight: 700;
+      cursor: pointer;
+      margin-right: 8px;
+    }
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-danger { background: var(--danger); color: #0b1021; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid var(--border); padding: 8px; font-size: 13px; }
+    th { background: #0c1425; text-align: left; }
+    .muted { color: var(--muted); font-size: 13px; }
+    #login-box { max-width: 360px; margin: 80px auto; }
+    .pill {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      font-size: 12px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div id="login-box" class="card">
+      <h2 style="margin:0 0 8px;">登录</h2>
+      <p class="muted">默认账号/密码可在脚本顶部修改。</p>
+      <label>账号</label>
+      <input id="login-user" value="admin">
+      <label>密码</label>
+      <input id="login-pass" type="password" value="123456">
+      <div style="margin-top:12px;">
+        <button class="btn" id="login-btn">登录</button>
+      </div>
+      <div id="login-tip" class="muted" style="margin-top:8px;"></div>
+    </div>
+
+    <div id="app" style="display:none;">
+      <h1>提测配置管理</h1>
+      <div class="muted" id="tip">从 config.json 拉取配置，保存时导出并替换服务器上的文件。</div>
+
+      <div class="card">
+        <div class="row">
+          <div>
+            <label>选择游戏</label>
+            <select id="game-select"></select>
+          </div>
+          <div style="align-self:flex-end;">
+            <button class="btn" id="new-game">新增游戏</button>
+            <button class="btn-secondary" id="export-json">导出 JSON</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="margin:0 0 10px;">编辑游戏</h3>
+        <div class="row">
+          <div><label>ID</label><input id="id"></div>
+          <div><label>标题</label><input id="title"></div>
+          <div><label>版本标签</label><input id="versionLabel"></div>
+        </div>
+        <div class="row">
+          <div><label>发布日期</label><input id="releaseDate" placeholder="2025-12-11"></div>
+          <div><label>最小安卓</label><input id="androidMin" placeholder="8.0"></div>
+          <div><label>包体大小</label><input id="size" placeholder="75 MB"></div>
+        </div>
+        <div class="row">
+          <div><label>主下载链接</label><input id="primaryDownload"></div>
+          <div><label>备用下载</label><input id="backupDownload"></div>
+        </div>
+        <div class="row">
+          <div><label>APK 文件名</label><input id="apkFileName"></div>
+          <div><label>备用域名</label><input id="backupHost"></div>
+        </div>
+        <div class="row">
+          <div><label>测试账号</label><input id="testAccount"></div>
+          <div><label>校验文件路径</label><input id="checksumFile"></div>
+        </div>
+        <div class="row">
+          <div><label>SHA256 值</label><input id="sha256"></div>
+        </div>
+        <div class="row">
+          <div><label>文档名称</label><input id="docName"></div>
+          <div><label>文档路径</label><input id="docPath"></div>
+          <div><label>文档位置说明</label><input id="docLocation"></div>
+        </div>
+        <div class="row">
+          <div><label>对接人</label><input id="contactPerson"></div>
+          <div><label>邮件</label><input id="contactEmail"></div>
+          <div><label>QQ/电话</label><input id="contactQQ"></div>
+        </div>
+        <div class="row">
+          <div><label>访问 token（留空则不校验）</label><input id="token"></div>
+        </div>
+        <div style="margin-top:12px;">
+          <button class="btn" id="save-game">保存当前</button>
+          <button class="btn-danger" id="delete-game">删除当前</button>
+          <span class="pill" id="status-pill">未保存</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="margin:0 0 10px;">当前配置（预览）</h3>
+        <textarea id="json-preview" rows="10" readonly></textarea>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 简单登录（前端校验），发布时可改为环境变量注入
+    const ADMIN_USER = 'admin';
+    const ADMIN_PASS = '123456';
+
+    const state = { games: [], current: null };
+    const $ = (id) => document.getElementById(id);
+
+    const inputs = [
+      'id','title','versionLabel','releaseDate','androidMin','size',
+      'primaryDownload','backupDownload','apkFileName','backupHost',
+      'testAccount','checksumFile','sha256','docName','docPath','docLocation',
+      'contactPerson','contactEmail','contactQQ','token'
+    ];
+
+    const renderSelect = () => {
+      const sel = $('game-select');
+      sel.innerHTML = '';
+      state.games.forEach(g => {
+        const opt = document.createElement('option');
+        opt.value = g.id;
+        opt.textContent = g.id;
+        sel.appendChild(opt);
+      });
+      if (state.current) sel.value = state.current.id;
+    };
+
+    const loadForm = (g) => {
+      inputs.forEach(k => $(k).value = g[k] || '');
+      state.current = g;
+      $('status-pill').textContent = '已加载';
+      renderPreview();
+    };
+
+    const gatherForm = () => {
+      const data = {};
+      inputs.forEach(k => data[k] = $(k).value.trim());
+      return data;
+    };
+
+    const renderPreview = () => {
+      $('json-preview').value = JSON.stringify({ games: state.games }, null, 2);
+    };
+
+    $('login-btn').onclick = () => {
+      const u = $('login-user').value.trim();
+      const p = $('login-pass').value;
+      if (u === ADMIN_USER && p === ADMIN_PASS) {
+        $('login-box').style.display = 'none';
+        $('app').style.display = 'block';
+      } else {
+        $('login-tip').textContent = '账号或密码错误';
+      }
+    };
+
+    $('game-select').onchange = () => {
+      const id = $('game-select').value;
+      const g = state.games.find(x => x.id === id);
+      if (g) loadForm(g);
+    };
+
+    $('save-game').onclick = () => {
+      const data = gatherForm();
+      if (!data.id) return alert('ID 不能为空');
+      const idx = state.games.findIndex(g => g.id === data.id);
+      if (idx >= 0) state.games[idx] = data;
+      else state.games.push(data);
+      renderSelect();
+      $('game-select').value = data.id;
+      state.current = data;
+      $('status-pill').textContent = '已保存(本地)';
+      renderPreview();
+    };
+
+    $('delete-game').onclick = () => {
+      const cur = state.current;
+      if (!cur) return;
+      if (!confirm(`确认删除 ${cur.id} ?`)) return;
+      state.games = state.games.filter(g => g.id !== cur.id);
+      state.current = state.games[0] || null;
+      renderSelect();
+      if (state.current) loadForm(state.current);
+      else inputs.forEach(k => $(k).value = '');
+      renderPreview();
+    };
+
+    $('new-game').onclick = () => {
+      const blank = {
+        id: 'new-id',
+        title: '',
+        versionLabel: '',
+        releaseDate: '',
+        androidMin: '',
+        size: '',
+        primaryDownload: '',
+        backupDownload: '',
+        apkFileName: '',
+        backupHost: '',
+        testAccount: '',
+        checksumFile: '',
+        sha256: '',
+        docName: '',
+        docPath: '',
+        docLocation: '',
+        contactPerson: '',
+        contactEmail: '',
+        contactQQ: '',
+        token: ''
+      };
+      state.games.push(blank);
+      state.current = blank;
+      renderSelect();
+      $('game-select').value = blank.id;
+      loadForm(blank);
+    };
+
+    $('export-json').onclick = () => {
+      const blob = new Blob([JSON.stringify({ games: state.games }, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'config.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    };
+
+    // 初始化：拉取现有 config.json
+    fetch('config.json')
+      .then(r => r.json())
+      .then(data => {
+        state.games = data.games || [];
+        if (!state.games.length) {
+          state.games = [{
+            id: 'demo',
+            title: '示例',
+            versionLabel: 'v1.0.0',
+            releaseDate: '2025-12-11',
+            androidMin: '8.0',
+            size: '75 MB'
+          }];
+        }
+        renderSelect();
+        loadForm(state.games[0]);
+      })
+      .catch(() => {
+        state.games = [];
+        renderSelect();
+      });
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,49 @@
+{
+  "games": [
+    {
+      "id": "bizgame",
+      "title": "商务游戏 · 提测站",
+      "versionLabel": "v0.9.3 (安卓 APK)",
+      "releaseDate": "2025-12-11",
+      "androidMin": "8.0",
+      "size": "75 MB",
+      "primaryDownload": "https://cdn.example.com/app/app-latest.apk",
+      "backupDownload": "https://backup.example.com/app/app-latest.apk",
+      "apkFileName": "app-latest.apk",
+      "backupHost": "backup.example.com",
+      "testAccount": "demo / 123456",
+      "checksumFile": "assets/app-latest.apk.sha256",
+      "sha256": "待替换：xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "docName": "《云上征途（0.1齐天伏魔）》-游戏简介 (1).txt",
+      "docPath": "./《云上征途（0.1齐天伏魔）》-游戏简介 (1).txt",
+      "docLocation": "C:\\\\Users\\\\WM\\\\Desktop\\\\tice",
+      "contactPerson": "对接人：王淼（企业微信）",
+      "contactEmail": "pingce@dxyx6888.com",
+      "contactQQ": "QQ：895528575（工作日 10:00-19:00）",
+      "token": ""
+    },
+    {
+      "id": "newgame",
+      "title": "新游 · 提测站（示例）",
+      "versionLabel": "v1.0.0-beta (安卓 APK)",
+      "releaseDate": "2026-01-05",
+      "androidMin": "9.0",
+      "size": "120 MB",
+      "primaryDownload": "https://cdn.example.com/newgame/app-beta.apk",
+      "backupDownload": "https://backup.example.com/newgame/app-beta.apk",
+      "apkFileName": "newgame-beta.apk",
+      "backupHost": "backup.example.com",
+      "testAccount": "tester / 654321",
+      "checksumFile": "assets/newgame/app-beta.apk.sha256",
+      "sha256": "待替换：yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+      "docName": "《新游》测试说明.txt",
+      "docPath": "./docs/newgame-guide.txt",
+      "docLocation": "C:\\\\Docs\\\\NewGame",
+      "contactPerson": "对接人：李四（企业微信）",
+      "contactEmail": "test@demo.com",
+      "contactQQ": "QQ：123456789",
+      "token": "demo-token"
+    }
+  ]
+}
+
