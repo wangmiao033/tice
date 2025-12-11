@@ -129,15 +129,8 @@
           <div><label>备用下载</label><input id="backupDownload"></div>
         </div>
         <div class="row">
-          <div><label>APK 文件名</label><input id="apkFileName"></div>
-          <div><label>备用域名</label><input id="backupHost"></div>
-        </div>
-        <div class="row">
           <div><label>测试账号</label><input id="testAccount"></div>
           <div><label>校验文件路径</label><input id="checksumFile"></div>
-        </div>
-        <div class="row">
-          <div><label>SHA256 值</label><input id="sha256"></div>
         </div>
         <div class="row">
           <div><label>文档名称</label><input id="docName"></div>
@@ -176,10 +169,11 @@
 
     const inputs = [
       'id','title','versionLabel','releaseDate','androidMin','size',
-      'primaryDownload','backupDownload','apkFileName','backupHost',
-      'testAccount','checksumFile','sha256','docName','docPath','docLocation',
+      'primaryDownload','backupDownload',
+      'testAccount','checksumFile','docName','docPath','docLocation',
       'contactPerson','contactEmail','contactQQ','token'
     ];
+    const hiddenFields = ['apkFileName','backupHost','sha256'];
 
     const renderSelect = () => {
       const sel = $('game-select');
@@ -231,8 +225,14 @@
       const data = gatherForm();
       if (!data.id) return alert('ID 不能为空');
       const idx = state.games.findIndex(g => g.id === data.id);
-      if (idx >= 0) state.games[idx] = data;
-      else state.games.push(data);
+      if (idx >= 0) {
+        const prev = state.games[idx] || {};
+        hiddenFields.forEach(k => data[k] = prev[k] || '');
+        state.games[idx] = data;
+      } else {
+        hiddenFields.forEach(k => data[k] = data[k] || '');
+        state.games.push(data);
+      }
       renderSelect();
       $('game-select').value = data.id;
       state.current = data;
