@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>商务游戏提测 - 下载中心</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #111827;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #60a5fa;
+      --accent-2: #a78bfa;
+      --border: #1f2937;
+      --success: #22c55e;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: radial-gradient(circle at 20% 20%, #1f2937 0, transparent 25%), radial-gradient(circle at 80% 0, #1e3a8a 0, transparent 22%), var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 48px 20px 64px;
+    }
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand .logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: #0b1021;
+      letter-spacing: 0.5px;
+    }
+    .brand .meta {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .title {
+      font-size: 28px;
+      font-weight: 700;
+      margin: 0;
+      letter-spacing: 0.2px;
+    }
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .card {
+      background: rgba(17, 24, 39, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(6px);
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .cta {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 18px 0 6px;
+    }
+    .btn {
+      padding: 14px 18px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      background: linear-gradient(135deg, var(--accent), #3b82f6);
+      color: #0b1021;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 10px 30px rgba(59, 130, 246, 0.35);
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      box-shadow: none;
+    }
+    .meta-info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .pill {
+      padding: 6px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+    ul {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .qr-box {
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      text-align: center;
+      min-height: 180px;
+      background: rgba(255, 255, 255, 0.02);
+    }
+    footer {
+      margin-top: 26px;
+      color: var(--muted);
+      font-size: 13px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .tag {
+      color: var(--success);
+      font-weight: 700;
+    }
+    .stat {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      color: var(--text);
+      gap: 10px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 10px;
+      background: rgba(96, 165, 250, 0.12);
+      color: var(--text);
+      border: 1px solid rgba(96, 165, 250, 0.25);
+      font-size: 13px;
+    }
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    .copy-btn {
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+    .copy-btn:hover { transform: translateY(-1px); }
+    .notice {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="brand">
+        <div class="logo">TG</div>
+        <div class="meta">
+          <p class="title">商务游戏 · 提测站</p>
+          <p class="subtitle">为线下商务场景而生的互动游戏，快速分发提测包</p>
+        </div>
+      </div>
+      <span class="pill">内测专用 · 请勿外传</span>
+    </header>
+
+    <section class="card hero">
+      <div>
+        <p class="subtitle">最新版</p>
+        <h1 class="title" style="font-size:34px;margin:6px 0 4px;" id="version-title">v0.9.3 (安卓 APK)</h1>
+        <p class="subtitle" id="release-line">更新于 2025-12-11 · 适配 Android 8.0+ · 约 75 MB</p>
+        <div class="cta">
+          <a class="btn" id="primary-download" href="https://cdn.example.com/app/app-latest.apk" download>下载安卓 APK</a>
+          <a class="btn btn-secondary" id="backup-download" href="https://backup.example.com/app/app-latest.apk" download>备用下载源</a>
+        </div>
+        <div class="meta-info">
+          <span class="pill" id="test-account">测试账号：demo / 123456</span>
+          <span class="pill" id="checksum-tip">校验：assets/app-latest.apk.sha256</span>
+          <span class="pill">弱网自适应 · 断点续传</span>
+        </div>
+      </div>
+      <div>
+        <div class="grid">
+          <div>
+            <h3>提测文档</h3>
+            <div class="card" style="padding:16px; background: rgba(255,255,255,0.02); border:1px dashed var(--border);">
+              <p class="subtitle" style="margin:0 0 10px;">包含游戏简介、版本信息等，可直接查看或下载。</p>
+              <div class="meta-info" style="gap:8px; margin-bottom:10px;">
+                <span class="pill" id="doc-name">文件： 《云上征途（0.1齐天伏魔）》-游戏简介 (1).txt</span>
+                <span class="pill" id="doc-location">位置：C:\\Users\\WM\\Desktop\\tice</span>
+              </div>
+              <div class="cta" style="margin:0; gap:10px;">
+                <a class="btn" style="padding:10px 14px;" id="doc-download" href="./《云上征途（0.1齐天伏魔）》-游戏简介 (1).txt" download>下载文档</a>
+                <a class="btn btn-secondary" style="padding:10px 14px;" id="doc-view" href="./《云上征途（0.1齐天伏魔）》-游戏简介 (1).txt" target="_blank">在线查看</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid" style="margin-top:16px;">
+      <div class="card">
+        <h3>安装提示</h3>
+        <ul>
+          <li>下载后如被拦截，请允许“来自未知来源的安装包”。</li>
+          <li>如所在网络限制直链，可改用备用下载源或扫描二维码。</li>
+          <li>若需 VPN / 专线，请提前确认网络环境可访问 CDN 域名。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>提测说明</h3>
+        <ul>
+          <li>本版本仅供商务场景内测，未经允许请勿外传包体。</li>
+          <li>默认埋点仅统计页面访问与下载点击，用于验证提测效果。</li>
+          <li>问题反馈请附带机型、系统版本与复现步骤，便于排查。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>联系与支持</h3>
+        <ul>
+          <li id="contact-person">对接人：王淼（企业微信）</li>
+          <li>邮件：<a id="contact-email" href="mailto:pingce@dxyx6888.com" style="color:var(--accent);">pingce@dxyx6888.com</a></li>
+          <li id="contact-qq">QQ：895528575（工作日 10:00-19:00）</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="grid" style="margin-top:16px;">
+      <div class="card">
+        <h3>下载信息</h3>
+        <div class="stat">
+          <div class="row">
+            <span class="badge">APK</span>
+            <span id="apk-file-line">文件：app-latest.apk · 约 75 MB</span>
+          </div>
+          <a class="btn btn-secondary" href="https://cdn.example.com/app/app-latest.apk" download>直链</a>
+        </div>
+        <div class="stat" style="margin-top:10px;">
+          <div class="row">
+            <span class="badge">备用</span>
+            <span id="backup-host">备源：backup.example.com</span>
+          </div>
+          <a class="btn btn-secondary" href="https://backup.example.com/app/app-latest.apk" download>备用源</a>
+        </div>
+        <div class="stat" style="margin-top:10px; flex-direction: column; align-items: flex-start; gap:8px;">
+          <div class="row">
+            <span class="badge">SHA256</span>
+            <span id="sha256-text">待替换：xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+          </div>
+          <div class="row" style="width:100%; justify-content: space-between;">
+            <small class="notice">下载后可用 sha256sum / shasum 校验，确保包体未被篡改。</small>
+            <button class="copy-btn" data-copy="#sha256-text">复制校验值</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <span>如需单独加密访问，可为下载链接添加临时 Token 或密码。</span>
+      <span class="tag">Test Only</span>
+    </footer>
+  </div>
+
+  <script>
+    // 复制 SHA256 值的小工具
+    document.querySelectorAll('[data-copy]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = document.querySelector(btn.dataset.copy);
+        if (!target) return;
+        const text = target.textContent.trim();
+        navigator.clipboard.writeText(text).then(() => {
+          btn.textContent = '已复制';
+          setTimeout(() => (btn.textContent = '复制校验值'), 1500);
+        });
+      });
+    });
+
+    // 通用配置：只改这里即可更新展示内容
+    const gameConfig = {
+      title: '商务游戏 · 提测站',
+      versionLabel: 'v0.9.3 (安卓 APK)',
+      releaseDate: '2025-12-11',
+      androidMin: '8.0',
+      size: '75 MB',
+      primaryDownload: 'https://cdn.example.com/app/app-latest.apk',
+      backupDownload: 'https://backup.example.com/app/app-latest.apk',
+      apkFileName: 'app-latest.apk',
+      backupHost: 'backup.example.com',
+      testAccount: 'demo / 123456',
+      checksumFile: 'assets/app-latest.apk.sha256',
+      sha256: '待替换：xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+      docName: '《云上征途（0.1齐天伏魔）》-游戏简介 (1).txt',
+      docPath: './《云上征途（0.1齐天伏魔）》-游戏简介 (1).txt',
+      docLocation: 'C:\\\\Users\\\\WM\\\\Desktop\\\\tice',
+      contactPerson: '对接人：王淼（企业微信）',
+      contactEmail: 'pingce@dxyx6888.com',
+      contactQQ: 'QQ：895528575（工作日 10:00-19:00）'
+    };
+
+    const setText = (id, text) => {
+      const el = document.getElementById(id);
+      if (el && text) el.textContent = text;
+    };
+    const setHref = (id, href) => {
+      const el = document.getElementById(id);
+      if (el && href) el.setAttribute('href', href);
+    };
+
+    // 写入标题与版本信息
+    setText('version-title', gameConfig.versionLabel);
+    setText('release-line', `更新于 ${gameConfig.releaseDate} · 适配 Android ${gameConfig.androidMin}+ · 约 ${gameConfig.size}`);
+    setText('test-account', `测试账号：${gameConfig.testAccount}`);
+    setText('checksum-tip', `校验：${gameConfig.checksumFile}`);
+
+    // 下载按钮与链接
+    setHref('primary-download', gameConfig.primaryDownload);
+    setHref('backup-download', gameConfig.backupDownload);
+    setHref('doc-download', gameConfig.docPath);
+    setHref('doc-view', gameConfig.docPath);
+
+    // 提测文档信息
+    setText('doc-name', `文件： ${gameConfig.docName}`);
+    setText('doc-location', `位置：${gameConfig.docLocation}`);
+
+    // 联系方式
+    setText('contact-person', gameConfig.contactPerson);
+    const emailEl = document.getElementById('contact-email');
+    if (emailEl) {
+      emailEl.textContent = gameConfig.contactEmail;
+      emailEl.href = `mailto:${gameConfig.contactEmail}`;
+    }
+    setText('contact-qq', gameConfig.contactQQ);
+
+    // 下载信息块
+    setText('apk-file-line', `文件：${gameConfig.apkFileName} · 约 ${gameConfig.size}`);
+    setText('backup-host', `备源：${gameConfig.backupHost}`);
+    setText('sha256-text', gameConfig.sha256);
+
+    // 顶部品牌标题（可选）
+    const brandTitle = document.querySelector('.title');
+    if (brandTitle && gameConfig.title) brandTitle.textContent = gameConfig.title;
+  </script>
+</body>
+</html>
+
